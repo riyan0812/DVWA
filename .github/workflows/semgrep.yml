@@ -1,0 +1,29 @@
+   name: Semgrep Analysis
+
+   on:
+     push:
+       branches:
+         - main
+     pull_request:
+       branches:
+         - main
+
+   jobs:
+     semgrep:
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v2
+
+         - name: Set up PHP
+           run: |
+             sudo apt-get update
+             sudo apt-get install -y php
+
+         - name: Install Semgrep
+           run: |
+             pip install semgrep
+
+         - name: Run Semgrep with Registry Rules
+           run: |
+             semgrep --config "p/ci" . || exit 1
